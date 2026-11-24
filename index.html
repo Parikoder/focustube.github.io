@@ -109,8 +109,8 @@ h2 { font-size: clamp(1.8rem, 4.2vw, 2.9rem); line-height: 1.08; letter-spacing:
 .steps h3 { margin: 0 0 0.25rem; font-size: 1.1rem; letter-spacing: -0.01em; }
 .steps p { margin: 0; color: var(--muted); }
 .steps b { color: var(--fg); font-weight: 600; }
-.codebar { display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 0.75rem; padding: 0.35rem 0.4rem 0.35rem 0.85rem; background: var(--bg); border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); max-width: 100%; }
-.codebar code { font-family: var(--mono); font-size: 0.88rem; user-select: all; white-space: nowrap; }
+.codebar { display: flex; width: fit-content; min-width: 0; align-items: center; gap: 0.6rem; margin-top: 0.75rem; padding: 0.35rem 0.4rem 0.35rem 0.85rem; background: var(--bg); border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); max-width: 100%; }
+.codebar code { font-family: var(--mono); font-size: 0.88rem; user-select: all; white-space: nowrap; min-width: 0; overflow-x: auto; }
 .copy { font: 600 0.8rem/1 var(--font); color: var(--fg); background: var(--surface-2); border: 0; border-radius: 999px; padding: 0.55rem 0.9rem; cursor: pointer; transition: transform 120ms ease-out; }
 .copy:active { transform: scale(0.95); }
 .note { margin-top: 1.5rem; color: var(--muted); font-size: 0.95rem; max-width: 40rem; }
@@ -118,6 +118,7 @@ h2 { font-size: clamp(1.8rem, 4.2vw, 2.9rem); line-height: 1.08; letter-spacing:
 footer { padding-block: 2.5rem calc(2.5rem + env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
 footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; }
 
+#firefox { scroll-margin-top: 4rem; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn, .copy { transition: none; }
@@ -137,14 +138,14 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
 <main id="top" class="wrap">
   <div class="hero">
     <div>
-      <p class="eyebrow">Chrome extension · Version 1.0</p>
+      <p class="eyebrow">Chrome and Firefox · Version 1.0</p>
       <h1>YouTube, without the <em>Shorts</em>.</h1>
       <p class="lede">Focus Tube removes Shorts from YouTube and leaves everything else alone. Watch the videos you chose, then get back to work.</p>
       <div class="cta">
         <a class="btn" id="dl" href="focus-tube.zip" download="focus-tube.zip">Download Focus Tube</a>
-        <a class="btn ghost" href="#install">How to install</a>
+        <a class="btn ghost" href="#firefox">Firefox version</a>
       </div>
-      <p class="meta">focus-tube.zip · 112 KB · Installs in four steps</p>
+      <p class="meta">Chrome: focus-tube.zip · 112 KB · Installs in four steps</p>
       <p class="status" id="status" role="status" aria-live="polite"></p>
     </div>
     <figure class="shot video">
@@ -174,7 +175,7 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
 
   <section id="install">
     <h2>Set it up in four steps.</h2>
-    <p class="sub">About a minute in Chrome. You install it from the folder you download here.</p>
+    <p class="sub">About a minute in Chrome. You install it from the folder you download here. Using Firefox? Scroll down.</p>
     <ol class="steps">
       <li>
         <div><h3>Download and unzip</h3><p>Use the download button above, then unzip <b>focus-tube.zip</b>. You get a folder named <b>focus-tube</b>.</p></div>
@@ -191,7 +192,30 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
         <div><h3>Open YouTube</h3><p>Shorts are gone. Pin Focus Tube from the puzzle-piece menu to reach study mode in one click.</p></div>
       </li>
     </ol>
-    <p class="note">On a phone, Chrome for Android does not run extensions. Firefox for Android and Kiwi Browser do. If a Short ever slips through after a YouTube redesign, the selectors in <b>shorts.css</b> are the place to adjust.</p>
+    <p class="note">On a phone, Chrome for Android does not run extensions. Firefox for Android does, but it only installs extensions that Mozilla has signed, so use the Firefox version once it is listed on the Firefox add-ons site. If a Short ever slips through after a YouTube redesign, the selectors in <b>shorts.css</b> are the place to adjust.</p>
+  </section>
+
+  <section id="firefox">
+    <h2>Firefox version.</h2>
+    <p class="sub">The same extension, packaged for Firefox on a computer. This install is temporary, so Firefox removes it when you close the browser.</p>
+    <ol class="steps">
+      <li>
+        <div><h3>Download the Firefox zip</h3><p>Save <b>focus-tube-firefox.zip</b>. You do not need to unzip it.</p>
+          <p style="margin-top:0.75rem"><a class="btn ghost" href="focus-tube-firefox.zip" download="focus-tube-firefox.zip">Download for Firefox</a></p>
+        </div>
+      </li>
+      <li>
+        <div><h3>Open the debugging page</h3><p>Type this into Firefox's address bar.</p>
+          <span class="codebar"><code id="ffaddr">about:debugging#/runtime/this-firefox</code><button class="copy" id="ffcopy" type="button">Copy</button></span>
+        </div>
+      </li>
+      <li>
+        <div><h3>Click Load Temporary Add-on</h3><p>Choose <b>focus-tube-firefox.zip</b>. Focus Tube appears in your add-ons list.</p></div>
+      </li>
+      <li>
+        <div><h3>Open YouTube</h3><p>Shorts are gone. Repeat steps 2 and 3 after you restart Firefox.</p></div>
+      </li>
+    </ol>
   </section>
 
   <section class="closer" aria-labelledby="closing">
@@ -248,6 +272,18 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
         : "The download did not start. Try again, or open the page in a browser.";
     });
   }
+
+  function wireCopy(btn, codeEl, text) {
+    btn.addEventListener("click", function () {
+      function done(ok) { btn.textContent = ok ? "Copied" : "Press Ctrl+C"; setTimeout(function () { btn.textContent = "Copy"; }, 1600); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(codeEl);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done(false);
+      }
+      try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (e) { fallback(); }
+    });
+  }
+  wireCopy(document.getElementById("ffcopy"), document.getElementById("ffaddr"), "about:debugging#/runtime/this-firefox");
 
   copy.addEventListener("click", function () {
     function done(ok) { copy.textContent = ok ? "Copied" : "Press Ctrl+C"; setTimeout(function () { copy.textContent = "Copy"; }, 1600); }
