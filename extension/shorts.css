@@ -1,0 +1,57 @@
+/* ---- Shorts: always hidden ---- */
+
+/* Shelves on home, search and channel pages */
+ytd-reel-shelf-renderer,
+ytd-rich-shelf-renderer[is-shorts],
+ytm-reel-shelf-renderer,
+grid-shelf-view-model:has(a[href^="/shorts/"]),
+
+/* Sidebar entries (full and collapsed) */
+ytd-guide-entry-renderer:has(a[href^="/shorts"]),
+ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]),
+ytm-pivot-bar-item-renderer:has(a[href="/shorts"]),
+ytm-pivot-bar-item-renderer:has(.pivot-shorts),
+
+/* Whole sections on the home grid, so no empty gap is left behind */
+ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),
+ytd-rich-section-renderer:has(a[href^="/shorts/"]),
+ytd-rich-grid-group:has(a[href^="/shorts/"]),
+ytd-reel-item-renderer,
+ytm-reel-item-renderer,
+
+/* Videos that carry the Shorts badge on their thumbnail */
+ytd-video-renderer:has(ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"]),
+ytd-grid-video-renderer:has(ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"]),
+ytd-compact-video-renderer:has(ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"]),
+
+/* Individual Shorts mixed into any video list */
+ytd-rich-item-renderer:has(a[href^="/shorts/"]),
+ytd-video-renderer:has(a[href^="/shorts/"]),
+ytd-grid-video-renderer:has(a[href^="/shorts/"]),
+ytd-compact-video-renderer:has(a[href^="/shorts/"]),
+yt-lockup-view-model:has(a[href^="/shorts/"]),
+ytm-shorts-lockup-view-model,
+ytm-shorts-lockup-view-model-v2,
+
+/* Shorts tab on channel pages, filter chips */
+yt-tab-shape[tab-title="Shorts"],
+tp-yt-paper-tab:has(a[href$="/shorts"]) {
+  display: none !important;
+}
+
+/* ---- Study mode (toggled from the popup) ---- */
+
+/* Home feed */
+html.ft-no-home ytd-browse[page-subtype="home"] #primary,
+html.ft-no-home ytd-browse[page-subtype="home"] ytd-rich-grid-renderer {
+  display: none !important;
+}
+
+/* Recommendations beside and under the video, plus end screen cards */
+html.ft-no-related #related,
+html.ft-no-related ytd-watch-next-secondary-results-renderer,
+html.ft-no-related .ytp-endscreen-content,
+html.ft-no-related .ytp-ce-element,
+html.ft-no-related .ytp-suggestion-set {
+  display: none !important;
+}

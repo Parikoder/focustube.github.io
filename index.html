@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Focus Tube is a Chrome extension that removes YouTube Shorts and nothing else.">
+<link rel="icon" href="focus-tube-logo.jpg">
+<title>Focus Tube</title>
+
+<style>
+/* Layout: dark, single-column editorial flow. One large hero (headline + logo image), then facts, then a numbered install sequence. */
+:root {
+  --bg: #0b0b0d;
+  --surface: #151518;
+  --surface-2: #1d1d21;
+  --line: #2a2a30;
+  --fg: #f5f5f7;
+  --muted: #a1a1a8;
+  --accent: #ff2d2d;
+  --accent-press: #d91f1f;
+  --on-accent: #ffffff;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 1rem/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+.wrap { max-width: 68rem; margin: 0 auto; }
+
+/* translucent nav */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding: 0.75rem max(16px, env(safe-area-inset-left, 0px));
+  background: rgba(11,11,13,0.62);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; letter-spacing: -0.01em; text-decoration: none; }
+.brand img { width: 28px; height: 28px; border-radius: 7px; object-fit: cover; object-position: 22% 40%; }
+.nav-links { display: flex; gap: 1.25rem; font-size: 0.9rem; color: var(--muted); }
+.nav-links a { text-decoration: none; padding: 0.25rem 0; }
+.nav-links a:hover { color: var(--fg); }
+@media (max-width: 520px) { .nav-links { display: none; } }
+
+/* buttons: feedback on press, instantly */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  font: 600 1rem/1 var(--font); letter-spacing: -0.005em;
+  padding: 0.95rem 1.5rem; border-radius: 999px; border: 0; cursor: pointer;
+  text-decoration: none; color: var(--on-accent); background: var(--accent);
+  transition: transform 120ms ease-out, background-color 120ms ease-out;
+}
+.btn:hover { background: #ff4a4a; }
+.btn:active { transform: scale(0.97); background: var(--accent-press); }
+.btn:focus-visible, .copy:focus-visible, .nav a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.btn.ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); }
+.btn.ghost:hover { background: var(--surface); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; padding-block: clamp(2.5rem, 7vw, 5.5rem); }
+.eyebrow { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 1rem; }
+h1 { font-size: clamp(2.6rem, 7.2vw, 5.2rem); line-height: 1.02; letter-spacing: -0.035em; font-weight: 700; margin: 0 0 1.25rem; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--accent); }
+.lede { font-size: clamp(1.05rem, 2vw, 1.3rem); line-height: 1.45; color: var(--muted); max-width: 32rem; margin: 0 0 2rem; text-wrap: pretty; }
+.cta { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.meta { margin: 1rem 0 0; font-size: 0.85rem; color: var(--muted); }
+.status { min-height: 1.25rem; margin: 0.75rem 0 0; font-size: 0.9rem; color: var(--muted); }
+.shot { margin: 0; border-radius: 28px; overflow: hidden; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07); }
+.shot img { width: 100%; height: auto; }
+.shot video { display: block; width: 100%; height: auto; aspect-ratio: auto 16 / 9; background: #000; }
+@media (max-width: 760px) { .hero { grid-template-columns: 1fr; } }
+.closer { display: grid; grid-template-columns: minmax(0,0.8fr) minmax(0,1.2fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
+.closer .shot { max-width: 24rem; }
+@media (max-width: 760px) { .closer { grid-template-columns: 1fr; } .closer .shot { max-width: 22rem; } }
+
+/* sections */
+section { padding-block: clamp(2.5rem, 6vw, 4.5rem); border-top: 1px solid var(--line); }
+h2 { font-size: clamp(1.8rem, 4.2vw, 2.9rem); line-height: 1.08; letter-spacing: -0.03em; font-weight: 700; margin: 0 0 0.75rem; text-wrap: balance; }
+.sub { color: var(--muted); max-width: 36rem; margin: 0 0 2.25rem; font-size: 1.1rem; text-wrap: pretty; }
+
+.blocked { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.75rem; }
+.blocked > div { background: var(--surface); padding: 1.5rem; min-width: 0; border-radius: 20px; }
+.blocked h3 { margin: 0 0 0.4rem; font-size: 1.05rem; letter-spacing: -0.01em; }
+.blocked p { margin: 0; color: var(--muted); font-size: 0.97rem; }
+.blocked code { font-family: var(--mono); font-size: 0.85em; color: var(--fg); }
+
+.study { margin-top: 1.25rem; padding: 1.5rem; border-radius: 20px; background: var(--surface-2); display: grid; gap: 0.35rem; }
+.study h3 { margin: 0; font-size: 1.05rem; letter-spacing: -0.01em; }
+.study p { margin: 0; color: var(--muted); max-width: 40rem; }
+
+/* install steps: a true sequence, so numbered */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 2.25rem minmax(0,1fr); gap: 1rem; align-items: start; padding: 1.25rem 1.25rem 1.25rem 1rem; background: var(--surface); border-radius: 20px; }
+.steps li::before { content: counter(s); font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; text-align: center; padding-top: 0.1rem; }
+.steps h3 { margin: 0 0 0.25rem; font-size: 1.1rem; letter-spacing: -0.01em; }
+.steps p { margin: 0; color: var(--muted); }
+.steps b { color: var(--fg); font-weight: 600; }
+.codebar { display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 0.75rem; padding: 0.35rem 0.4rem 0.35rem 0.85rem; background: var(--bg); border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); max-width: 100%; }
+.codebar code { font-family: var(--mono); font-size: 0.88rem; user-select: all; white-space: nowrap; }
+.copy { font: 600 0.8rem/1 var(--font); color: var(--fg); background: var(--surface-2); border: 0; border-radius: 999px; padding: 0.55rem 0.9rem; cursor: pointer; transition: transform 120ms ease-out; }
+.copy:active { transform: scale(0.95); }
+.note { margin-top: 1.5rem; color: var(--muted); font-size: 0.95rem; max-width: 40rem; }
+
+footer { padding-block: 2.5rem calc(2.5rem + env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .btn, .copy { transition: none; }
+}
+</style>
+</head>
+<body>
+
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="focus-tube-logo.jpg" alt="" width="28" height="28"><span>Focus Tube</span></a>
+    <nav class="nav-links" aria-label="Sections"><a href="#what">What it blocks</a><a href="#install">Install</a></nav>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Chrome extension · Version 1.0</p>
+      <h1>YouTube, without the <em>Shorts</em>.</h1>
+      <p class="lede">Focus Tube removes Shorts from YouTube and leaves everything else alone. Watch the videos you chose, then get back to work.</p>
+      <div class="cta">
+        <a class="btn" id="dl" href="focus-tube.zip" download="focus-tube.zip">Download Focus Tube</a>
+        <a class="btn ghost" href="#install">How to install</a>
+      </div>
+      <p class="meta">focus-tube.zip · 112 KB · Installs in four steps</p>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </div>
+    <figure class="shot video">
+      <video id="demo" controls playsinline preload="metadata" aria-label="Focus Tube: what it does and how to set it up">
+        <source src="focus-tube-video.mp4" type="video/mp4">
+        <source src="https://files2.heygen.ai/aries/output/f2e4b999-833f-431a-9781-622da0a146b3/video.mp4?Expires=1796057309&amp;Signature=dCokyDyT-eJHlqBCSZSICcH7Y-myE9C-nlc359wJlH4dPHzh1eW4Zr~joinwpQH84BBn1DNLSRyXNj6RdFjFJI5RnCEPkeHstrZmq3UZah~WjT1KrIcArMXlX9K-aMjqoGiZ0J6Z-QeI2YOK~bzJYrPUy7Rf2LS24SZtMkcV5WGcE7BBqrVWP0C52ueoTuOnkiHsQYpCywn~HffB7N54KF0dFTn4Si8YnD0UIMA~I8IeFhC2nlz5LJ-BrymsI8YvHUQHenf6jimfx468V6EXSkvVz5Uo8jGa3wfU4PymsLbdE6ct6wkhKTjb7iXUaFZDZGu70BA73iqs6w7KLNNY-A__&amp;Key-Pair-Id=K3TSZ3KU01LY58" type="video/mp4">
+        <a href="https://files2.heygen.ai/aries/output/f2e4b999-833f-431a-9781-622da0a146b3/video.mp4?Expires=1796057309&amp;Signature=dCokyDyT-eJHlqBCSZSICcH7Y-myE9C-nlc359wJlH4dPHzh1eW4Zr~joinwpQH84BBn1DNLSRyXNj6RdFjFJI5RnCEPkeHstrZmq3UZah~WjT1KrIcArMXlX9K-aMjqoGiZ0J6Z-QeI2YOK~bzJYrPUy7Rf2LS24SZtMkcV5WGcE7BBqrVWP0C52ueoTuOnkiHsQYpCywn~HffB7N54KF0dFTn4Si8YnD0UIMA~I8IeFhC2nlz5LJ-BrymsI8YvHUQHenf6jimfx468V6EXSkvVz5Uo8jGa3wfU4PymsLbdE6ct6wkhKTjb7iXUaFZDZGu70BA73iqs6w7KLNNY-A__&amp;Key-Pair-Id=K3TSZ3KU01LY58" target="_blank" rel="noopener">Watch the Focus Tube video</a>
+      </video>
+    </figure>
+  </div>
+
+  <section id="what">
+    <h2>Only Shorts. Nothing else.</h2>
+    <p class="sub">Shorts are blocked every time you open YouTube, with nothing to switch on.</p>
+    <div class="blocked">
+      <div><h3>The Shorts shelf</h3><p>Gone from your home page, search results and channel pages.</p></div>
+      <div><h3>The sidebar button</h3><p>The Shorts entry disappears from the full and collapsed sidebar.</p></div>
+      <div><h3>The channel tab</h3><p>Channels show no Shorts tab to fall into.</p></div>
+      <div><h3>Shorts in video lists</h3><p>Any Short mixed into home, search or recommendations is hidden.</p></div>
+      <div><h3>Shorts links</h3><p>Any <code>youtube.com/shorts/…</code> link sends you to the YouTube home page instead of playing.</p></div>
+    </div>
+    <div class="study">
+      <h3>Optional study mode</h3>
+      <p>Click the extension icon to also hide the home feed, and to hide recommendations beside the video and on end screens. Both are off until you turn them on.</p>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Set it up in four steps.</h2>
+    <p class="sub">About a minute in Chrome. You install it from the folder you download here.</p>
+    <ol class="steps">
+      <li>
+        <div><h3>Download and unzip</h3><p>Use the download button above, then unzip <b>focus-tube.zip</b>. You get a folder named <b>focus-tube</b>.</p></div>
+      </li>
+      <li>
+        <div><h3>Open the extensions page</h3><p>Type this into Chrome's address bar, then turn on <b>Developer mode</b> at the top right.</p>
+          <span class="codebar"><code id="ext">chrome://extensions</code><button class="copy" id="copy" type="button">Copy</button></span>
+        </div>
+      </li>
+      <li>
+        <div><h3>Click Load unpacked</h3><p>Pick the unzipped <b>focus-tube</b> folder. Focus Tube appears in your extensions list.</p></div>
+      </li>
+      <li>
+        <div><h3>Open YouTube</h3><p>Shorts are gone. Pin Focus Tube from the puzzle-piece menu to reach study mode in one click.</p></div>
+      </li>
+    </ol>
+    <p class="note">On a phone, Chrome for Android does not run extensions. Firefox for Android and Kiwi Browser do. If a Short ever slips through after a YouTube redesign, the selectors in <b>shorts.css</b> are the place to adjust.</p>
+  </section>
+
+  <section class="closer" aria-labelledby="closing">
+    <figure class="shot">
+      <img src="focus-tube-logo.jpg" width="1033" height="1121" alt="A person in a black suit gives a thumbs up while touching a red Shorts logo">
+    </figure>
+    <div>
+      <h2 id="closing">Skip the scroll.</h2>
+      <p class="sub">Download Focus Tube, follow the four steps above, and open YouTube without Shorts.</p>
+      <div class="cta"><a class="btn" id="dl2" href="focus-tube.zip" download="focus-tube.zip">Download Focus Tube</a></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>Focus Tube · Version 1.0</span><a href="#top">Back to top</a></div>
+</footer>
+
+<script>
+(function () {
+  var dls = [document.getElementById("dl"), document.getElementById("dl2")];
+  var status = document.getElementById("status");
+  var copy = document.getElementById("copy");
+  var ZIP_B64 = "";  // filled in only for the hosted preview; the live site serves focus-tube.zip directly
+  function zipBlob() {
+    if (ZIP_B64) {
+      var bin = atob(ZIP_B64), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return Promise.resolve(new Blob([bytes], { type: "application/zip" }));
+    }
+    return fetch("focus-tube.zip").then(function (r) { if (!r.ok) throw new Error("fetch"); return r.blob(); });
+  }
+  var ext = document.getElementById("ext");
+
+  // In a hosted page the plain link downloads the zip. Inside a viewer that
+  // offers the downloads capability, hand the file to it instead.
+  dls.forEach(function (dl) { dl.addEventListener("click", onDownload); });
+  function onDownload(e) {
+    var cap = window.claude && window.claude.use;
+    if (!cap) return;
+    e.preventDefault();
+    status.textContent = "Preparing your download…";
+    Promise.all([
+      window.claude.use("downloads"),
+      zipBlob()
+    ]).then(function (res) {
+      if (!res[0]) { status.textContent = "Downloads are not available in this view. Open the page in a browser to download."; return; }
+      return res[0].save({ filename: "focus-tube.zip", data: res[1] }).then(function () {
+        status.textContent = "Saved. Unzip it, then follow the four steps below.";
+      });
+    }).catch(function (err) {
+      status.textContent = (err && err.code === "declined")
+        ? "Download cancelled."
+        : "The download did not start. Try again, or open the page in a browser.";
+    });
+  }
+
+  copy.addEventListener("click", function () {
+    function done(ok) { copy.textContent = ok ? "Copied" : "Press Ctrl+C"; setTimeout(function () { copy.textContent = "Copy"; }, 1600); }
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(ext);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done(false);
+    }
+    try {
+      navigator.clipboard.writeText("chrome://extensions").then(function () { done(true); }, fallback);
+    } catch (e) { fallback(); }
+  });
+})();
+</script>
+
+</body>
+</html>

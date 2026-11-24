@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Focus Tube</title>
+<style>
+  body { width: 260px; margin: 0; padding: 14px 16px; font: 14px/1.4 system-ui, sans-serif; color: #1c1c1e; background: #fff; }
+  .logo { display: block; width: 100%; max-height: 150px; object-fit: contain; margin: 0 0 10px; }
+  h1 { font-size: 15px; margin: 0 0 2px; }
+  p.sub { margin: 0 0 12px; color: #636366; font-size: 12px; }
+  label { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px solid #e5e5ea; cursor: pointer; }
+  label small { display: block; color: #636366; font-size: 12px; }
+  input { margin-top: 3px; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #f2f2f7; background: #1c1c1e; }
+    p.sub, label small { color: #aeaeb2; }
+    label { border-color: #3a3a3c; }
+  }
+</style>
+</head>
+<body>
+  <img class="logo" src="logo.png" alt="Focus Tube logo">
+  <h1>Focus Tube</h1>
+  <p class="sub">Shorts are always blocked.</p>
+  <label for="noHome">
+    <input type="checkbox" id="noHome">
+    <span>Hide home feed<small>Go to your playlists or search instead</small></span>
+  </label>
+  <label for="noRelated">
+    <input type="checkbox" id="noRelated">
+    <span>Hide recommendations<small>No sidebar or end screen suggestions</small></span>
+  </label>
+  <script src="popup.js"></script>
+</body>
+</html>
