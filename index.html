@@ -143,7 +143,7 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
       <p class="lede">Focus Tube removes Shorts from YouTube and leaves everything else alone. Watch the videos you chose, then get back to work.</p>
       <div class="cta">
         <a class="btn" id="dl" href="focus-tube.zip" download="focus-tube.zip">Download Focus Tube</a>
-        <a class="btn ghost" href="#firefox">Firefox version</a>
+        <a class="btn ghost" href="https://addons.mozilla.org/en-US/firefox/addon/focus-tube-no-shorts/" target="_blank" rel="noopener">Add to Firefox</a>
       </div>
       <p class="meta">Chrome: focus-tube.zip · 112 KB · Installs in four steps</p>
       <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -192,30 +192,14 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
         <div><h3>Open YouTube</h3><p>Shorts are gone. Pin Focus Tube from the puzzle-piece menu to reach study mode in one click.</p></div>
       </li>
     </ol>
-    <p class="note">On a phone, Chrome for Android does not run extensions. Firefox for Android does, but it only installs extensions that Mozilla has signed, so use the Firefox version once it is listed on the Firefox add-ons site. If a Short ever slips through after a YouTube redesign, the selectors in <b>shorts.css</b> are the place to adjust.</p>
+    <p class="note">On a phone, Chrome for Android does not run extensions. Firefox for Android does, so use the Firefox version below on your phone. If a Short ever slips through after a YouTube redesign, the selectors in <b>shorts.css</b> are the place to adjust.</p>
   </section>
 
   <section id="firefox">
-    <h2>Firefox version.</h2>
-    <p class="sub">The same extension, packaged for Firefox on a computer. This install is temporary, so Firefox removes it when you close the browser.</p>
-    <ol class="steps">
-      <li>
-        <div><h3>Download the Firefox zip</h3><p>Save <b>focus-tube-firefox.zip</b>. You do not need to unzip it.</p>
-          <p style="margin-top:0.75rem"><a class="btn ghost" href="focus-tube-firefox.zip" download="focus-tube-firefox.zip">Download for Firefox</a></p>
-        </div>
-      </li>
-      <li>
-        <div><h3>Open the debugging page</h3><p>Type this into Firefox's address bar.</p>
-          <span class="codebar"><code id="ffaddr">about:debugging#/runtime/this-firefox</code><button class="copy" id="ffcopy" type="button">Copy</button></span>
-        </div>
-      </li>
-      <li>
-        <div><h3>Click Load Temporary Add-on</h3><p>Choose <b>focus-tube-firefox.zip</b>. Focus Tube appears in your add-ons list.</p></div>
-      </li>
-      <li>
-        <div><h3>Open YouTube</h3><p>Shorts are gone. Repeat steps 2 and 3 after you restart Firefox.</p></div>
-      </li>
-    </ol>
+    <h2>Get it for Firefox.</h2>
+    <p class="sub">Install Focus Tube from the Firefox add-ons site. It works in Firefox on a computer and in Firefox for Android.</p>
+    <div class="cta"><a class="btn" href="https://addons.mozilla.org/en-US/firefox/addon/focus-tube-no-shorts/" target="_blank" rel="noopener">Add to Firefox</a></div>
+    <p class="note">On Android, open this page in Firefox and use the same button. The add-ons site lets you add it like any other extension.</p>
   </section>
 
   <section class="closer" aria-labelledby="closing">
@@ -272,18 +256,6 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
         : "The download did not start. Try again, or open the page in a browser.";
     });
   }
-
-  function wireCopy(btn, codeEl, text) {
-    btn.addEventListener("click", function () {
-      function done(ok) { btn.textContent = ok ? "Copied" : "Press Ctrl+C"; setTimeout(function () { btn.textContent = "Copy"; }, 1600); }
-      function fallback() {
-        var r = document.createRange(); r.selectNodeContents(codeEl);
-        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done(false);
-      }
-      try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (e) { fallback(); }
-    });
-  }
-  wireCopy(document.getElementById("ffcopy"), document.getElementById("ffaddr"), "about:debugging#/runtime/this-firefox");
 
   copy.addEventListener("click", function () {
     function done(ok) { copy.textContent = ok ? "Copied" : "Press Ctrl+C"; setTimeout(function () { copy.textContent = "Copy"; }, 1600); }
