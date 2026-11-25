@@ -200,6 +200,27 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
     <p class="sub">Install Focus Tube from the Firefox add-ons site. It works in Firefox on a computer and in Firefox for Android.</p>
     <div class="cta"><a class="btn" href="https://addons.mozilla.org/en-US/firefox/addon/focus-tube-no-shorts/" target="_blank" rel="noopener">Add to Firefox</a></div>
     <p class="note">On Android, open this page in Firefox and use the same button. The add-ons site lets you add it like any other extension.</p>
+
+    <h3 style="margin:2.25rem 0 0.5rem;font-size:1.3rem;letter-spacing:-0.02em">Or install it manually</h3>
+    <p class="sub" style="margin-bottom:1.25rem">This route is temporary, so Firefox removes the extension when you close the browser. It works on a computer only.</p>
+    <ol class="steps">
+      <li>
+        <div><h3>Download the Firefox package</h3><p>Save <b>focus-tube-firefox.zip</b>. You do not need to unzip it.</p>
+          <p style="margin-top:0.75rem"><a class="btn ghost" href="focus-tube-firefox.zip" download="focus-tube-firefox.zip">Download for Firefox</a></p>
+        </div>
+      </li>
+      <li>
+        <div><h3>Open the debugging page</h3><p>Type this into Firefox's address bar.</p>
+          <span class="codebar"><code id="ffaddr">about:debugging#/runtime/this-firefox</code><button class="copy" id="ffcopy" type="button">Copy</button></span>
+        </div>
+      </li>
+      <li>
+        <div><h3>Click Load Temporary Add-on</h3><p>Choose <b>focus-tube-firefox.zip</b>. Focus Tube appears in your add-ons list.</p></div>
+      </li>
+      <li>
+        <div><h3>Open YouTube</h3><p>Shorts are gone. Repeat steps 2 and 3 after you restart Firefox.</p></div>
+      </li>
+    </ol>
   </section>
 
   <section class="closer" aria-labelledby="closing">
@@ -256,6 +277,16 @@ footer .wrap { border-top: 1px solid var(--line); padding-top: 2rem; display: fl
         : "The download did not start. Try again, or open the page in a browser.";
     });
   }
+
+  var ffcopy = document.getElementById("ffcopy"), ffaddr = document.getElementById("ffaddr");
+  if (ffcopy) ffcopy.addEventListener("click", function () {
+    function done(ok) { ffcopy.textContent = ok ? "Copied" : "Press Ctrl+C"; setTimeout(function () { ffcopy.textContent = "Copy"; }, 1600); }
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(ffaddr);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); done(false);
+    }
+    try { navigator.clipboard.writeText("about:debugging#/runtime/this-firefox").then(function () { done(true); }, fallback); } catch (e) { fallback(); }
+  });
 
   copy.addEventListener("click", function () {
     function done(ok) { copy.textContent = ok ? "Copied" : "Press Ctrl+C"; setTimeout(function () { copy.textContent = "Copy"; }, 1600); }
